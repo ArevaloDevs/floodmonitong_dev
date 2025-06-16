@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF‑8" />
+  <meta name="viewport" content="width=device‑width, initial‑scale=1.0" />
+  <link rel="icon" type="image/png" href="icon_logo.png" />
+  <title>Combined Flood Monitoring Dashboard</title>
+  <style>
+    :root {
+      --dark-bg: #1e293b;
+      --dark-header: #0f172a;
+      --dark-card: #334155;
+      --dark-text: #ffffff;
+      --light-bg: #f8fafc;
+      --light-header: #e2e8f0;
+      --light-card: #ffffff;
+      --light-text: #1e293b;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--dark-bg);
+      color: var(--dark-text);
+      margin: 0;
+      transition: all 0.3s ease;
+    }
+
+    body.light {
+      background: var(--light-bg);
+      color: var(--light-text);
+    }
+
+    header {
+      text-align: center;
+      padding: 1rem;
+      background: var(--dark-header);
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--dark-text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.light header {
+      background: var(--light-header);
+      color: var(--light-text);
+    }
+
+    .home-btn, .export-buttons {
+      text-align: center;
+      margin: 1rem 0;
+    }
+
+    .home-btn button,
+    .export-buttons button {
+      padding: 0.5rem 1rem;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      padding: 1rem;
+    }
+
+    .node-section {
+      background: var(--dark-card);
+      border-radius: 8px;
+      padding: 1rem;
+      flex: 1 1 300px;
+      max-width: 400px;
+      transition: background 0.3s;
+    }
+
+    body.light .node-section {
+      background: var(--light-card);
+    }
+
+    .node-section h2 {
+      text-align: center;
+    }
+
+    iframe {
+      width: 100%;
+      height: 250px;
+      border: none;
+      border-radius: 6px;
+    }
+
+    .prediction-box {
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      text-align: center;
+      font-weight: bold;
+      border-radius: 6px;
+    }
+
+    .table-container {
+      max-height: 180px;
+      overflow-y: auto;
+      background: rgba(255,255,255,0.05);
+      margin: 0.5rem 0;
+      border-radius: 6px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    th, td {
+      padding: 0.25rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    th {
+      background: rgba(0,0,0,0.2);
+    }
+
+    body.light th {
+      background: rgba(0,0,0,0.05);
+    }
+
+    button, a button {
+      padding: 0.4rem 0.8rem;
+      background: #394f7e;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    button:hover, a button:hover {
+      background: white;
+      color: black;
+    }
+
+    .button-row {
+      text-align: center;
+      margin: 0.5rem 0;
+    }
+
+    .button-row button {
+      padding: 0.4rem 0.8rem;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      background: var(--dark-header);
+      padding: 1rem;
+      font-size: 0.85rem;
+      color: var(--dark-text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.light footer {
+      background: var(--light-header);
+      color: var(--light-text);
+    }
+
+    .toggle-mode {
+      position: fixed;
+      top: 12px;
+      right: 16px;
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: inherit;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <button class="toggle-mode" onclick="toggleMode()">🌙</button>
+
+  <header>Flood Monitoring Dashboard</header>
+
+  <div class="container">
+    <div class="node-section" data-id="1" data-channel="2887499">
+      <h2>NODE 1</h2>
+      <iframe src="https://thingspeak.com/channels/2887499/charts/1?bgcolor=%23ffffff&color=%23ff0000&dynamic=true&results=60"></iframe>
+      <div id="prediction1" class="prediction-box">Loading...</div>
+      <div class="table-container">
+        <table id="table1">
+          <thead><tr><th>Date</th><th>Time</th><th>Distance (cm)</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="button-row">
+        <a href="https://thingspeak.com/channels/2887499" target="_blank"><button>View Channel</button></a>
+      </div>
+    </div>
+
+    <div class="node-section" data-id="2" data-channel="2952189">
+      <h2>NODE 2</h2>
+      <iframe src="https://thingspeak.com/channels/2952189/charts/1?bgcolor=%23ffffff&color=%2300aaff&dynamic=true&results=60"></iframe>
+      <div id="prediction2" class="prediction-box">Loading...</div>
+      <div class="table-container">
+        <table id="table2">
+          <thead><tr><th>Date</th><th>Time</th><th>Distance (cm)</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="button-row">
+        <a href="https://thingspeak.com/channels/2952189" target="_blank"><button>View Channel</button></a>
+      </div>
+    </div>
+
+    <div class="node-section" data-id="3" data-channel="2952294">
+      <h2>NODE 3</h2>
+      <iframe src="https://thingspeak.com/channels/2952294/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60"></iframe>
+      <div id="prediction3" class="prediction-box">Loading...</div>
+      <div class="table-container">
+        <table id="table3">
+          <thead><tr><th>Date</th><th>Time</th><th>Distance (cm)</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="button-row">
+        <a href="https://thingspeak.com/channels/2952294" target="_blank"><button>View Channel</button></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="export-buttons">
+    <button onclick="downloadExcelAll()">📊 Download All – Excel</button>
+    <button onclick="downloadPDFAll()">📄 Download All – PDF</button>
+    <button onclick="window.location.href='index.html'">🏠 Back to Home</button>
+  </div>
+
+  <footer>
+    © 2025 Flood Monitoring Dashboard (DevMode) | Powered by ThingSpeak
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    const nodes = [
+      { id: 1, channel: 2887499, key: 'WKVJAZJ72HAHK7BK' },
+      { id: 2, channel: 2952189, key: '0U4S8QMRAZIQH1SW' },
+      { id: 3, channel: 2952294, key: '23HH9YX2TJIUBJGX' }
+    ];
+
+    async function fetchNode(node) {
+      const res = await fetch(`https://api.thingspeak.com/channels/${node.channel}/feeds.json?results=60&api_key=${node.key}`);
+      const json = await res.json();
+      const list = json.feeds.reverse().filter(f => f.field1).slice(0, 30);
+      const tableBody = document.querySelector(`#table${node.id} tbody`);
+      tableBody.innerHTML = '';
+      list.forEach(f => {
+        const t = new Date(f.created_at);
+        tableBody.insertAdjacentHTML('beforeend',
+          `<tr><td>${t.toLocaleDateString()}</td><td>${t.toLocaleTimeString()}</td><td>${parseFloat(f.field1).toFixed(2)}</td></tr>`
+        );
+      });
+      const avg = list.reduce((s, f) => s + parseFloat(f.field1), 0) / list.length;
+      const predBox = document.getElementById(`prediction${node.id}`);
+      if (avg < 15) {
+        predBox.textContent = `✅ No Flooding – ${avg.toFixed(2)}cm`;
+        predBox.style.background = '#34d399';
+      } else {
+        predBox.textContent = `⚠️ Possible Flooding – ${avg.toFixed(2)}cm`;
+        predBox.style.background = '#f87171';
+      }
+    }
+
+    nodes.forEach(n => { fetchNode(n); setInterval(() => fetchNode(n), 60000); });
+
+    function downloadExcelAll() {
+      const wb = XLSX.utils.book_new();
+      nodes.forEach(({ id, channel }) => {
+        const table = document.querySelector(`#table${id}`);
+        const sheet = XLSX.utils.table_to_sheet(table);
+        XLSX.utils.sheet_add_aoa(sheet, [[`NODE ${id} (Channel: ${channel})`]], { origin: 0 });
+        XLSX.utils.book_append_sheet(wb, sheet, `Node${id}`);
+      });
+      XLSX.writeFile(wb, "combined_flood_data.xlsx");
+    }
+
+    function downloadPDFAll() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      nodes.forEach(({ id, channel }, idx) => {
+        if (idx) doc.addPage();
+        doc.setFontSize(14);
+        doc.text("WATER LEVEL DATA FOR EARLY WARNING PREDICTION", 20, 20);
+        doc.setFontSize(12);
+        doc.text(`NODE ${id} (Channel: ${channel})`, 20, 30);
+        let y = 40;
+        document.querySelectorAll(`#table${id} tbody tr`).forEach(tr => {
+          const cells = [...tr.cells].map(c => c.textContent).join(" | ");
+          doc.text(cells, 20, y);
+          y += 6;
+          if (y > 270) { doc.addPage(); y = 20; }
+        });
+        const pred = document.getElementById(`prediction${id}`).textContent;
+        doc.text(pred, 20, y + 6);
+      });
+      doc.save("combined_flood_data.pdf");
+    }
+
+    function toggleMode() {
+      const body = document.body;
+      const toggleBtn = document.querySelector(".toggle-mode");
+      body.classList.toggle("light");
+      toggleBtn.textContent = body.classList.contains("light") ? "☀️" : "🌙";
+    }
+  </script>
+</body>
+</html>

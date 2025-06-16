@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Developer Dashboard - Flood Monitoring</title>
+  <link rel="icon" type="image/png" href="icon_logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --blue-600: #2563eb;
+      --blue-300: #ffffff;
+      --gray-900: 111827#;
+      --white: #ffffff;
+      --radius: 0.5rem;
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+      font-family: 'Poppins', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+      color: var(--white);
+      overflow: hidden;
+    }
+
+    /* Background GIF with overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: url('background.gif') no-repeat center center / cover;
+      z-index: -2;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.7); /* dark overlay for readability */
+      z-index: -1;
+    }
+
+    #pst-time-box {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background-color: rgba(31, 41, 55, 0.85);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      box-shadow: var(--shadow-md);
+      z-index: 1000;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--blue-300);
+      max-width: 800px;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: #d1d5db;
+      margin-bottom: 2rem;
+      max-width: 700px;
+    }
+
+    button {
+      background-color: rgba(37, 38, 39, 0.85);
+      color: var(--white);
+      font-weight: 600;
+      padding: 0.75rem 2rem;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-md);
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    button:hover {
+      background-color: blue;
+      transform: translateY(-2px);
+    }
+
+    footer {
+      position: fixed;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #9ca3af;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      h2 {
+        font-size: 1rem;
+      }
+
+      button {
+        width: 90%;
+        max-width: 300px;
+      }
+
+      #pst-time-box {
+        font-size: 0.75rem;
+        padding: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="pst-time-box">
+    <div id="current-date">Date loading...</div>
+    <div id="current-time">Time loading...</div>
+  </div>
+
+  <main>
+    <h1>Real-Time Flood Monitoring and Alert System through the Integration of Sensor Network and IoT Platform using ESP32 and ThingSpeak</h1>
+    <button onclick="location.href='nodes.html'">ENTER DEV MODE</button>
+  </main>
+
+  <footer>
+     © 2025 Flood Monitoring Dashboard (DevMode) | Powered by ThingSpeak
+  </footer>
+
+  <script>
+    function updatePSTClock() {
+      const now = new Date();
+      const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+      const phTime = new Date(utc + (3600000 * 8));
+
+      const date = phTime.toLocaleDateString('en-PH', {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+
+      const time = phTime.toLocaleTimeString('en-PH', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+
+      document.getElementById('current-date').textContent = date;
+      document.getElementById('current-time').textContent = time;
+    }
+
+    setInterval(updatePSTClock, 1000);
+    updatePSTClock();
+  </script>
+
+</body>
+</html>
